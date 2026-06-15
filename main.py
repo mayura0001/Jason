@@ -1,15 +1,27 @@
-from openai import OpenAI
-from dotenv import load_dotenv
+import requests
+import json
 import os
+from dotenv import load_dotenv
 
 load_dotenv()
+print("successfully loaded env variables")
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
-response = client.responses.create(
-    model="gpt-4o-mini",
-    input="Write a one-sentence bedtime story about a unicorn."
-
+response = requests.post(
+    "https://openrouter.ai/api/v1/chat/completions",
+    headers={
+        "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
+        "Content-Type": "application/json",
+    },
+    json={
+        "model": "openai/gpt-oss-120b:free",
+        "messages": [
+            {
+                "role": "user",
+                "content": "How many r's are in the word 'strawberry'?"
+            }
+        ],
+        "reasoning": {"enabled": True}
+    }
 )
 
-print(response.output_text)
+print(response.json()["choices"][0]["message"]["content"])
