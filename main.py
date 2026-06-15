@@ -17,11 +17,16 @@ response = requests.post(
         "messages": [
             {
                 "role": "user",
-                "content": "How many r's are in the word 'strawberry'?"
+                "content": "Hello, how are you doing today?"
             }
         ],
         "reasoning": {"enabled": True}
     }
 )
 
-print(response.json()["choices"][0]["message"]["content"])
+if response.status_code != 200:
+    print(f"Error {response.status_code}:", response.json())
+else:
+    message = response.json()["choices"][0]["message"]
+    print("Reasoning:", message.get("reasoning", "N/A"))
+    print("Response:", message["content"])
