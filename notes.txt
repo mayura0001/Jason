@@ -1,0 +1,4 @@
+* Node → everything in DOM
+* Element → actual HTML tags
+* Document → whole page / root of DOM tree
+
