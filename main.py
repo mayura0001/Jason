@@ -6,6 +6,9 @@ from dotenv import load_dotenv
 load_dotenv()
 print("successfully loaded env variables")
 
+
+user_input = "Hello, how are you doing today?"
+
 response = requests.post(
     "https://openrouter.ai/api/v1/chat/completions",
     headers={
@@ -17,16 +20,18 @@ response = requests.post(
         "messages": [
             {
                 "role": "user",
-                "content": "Hello, how are you doing today?"
+                "content": user_input
             }
         ],
         "reasoning": {"enabled": True}
     }
 )
 
-if response.status_code != 200:
-    print(f"Error {response.status_code}:", response.json())
-else:
-    message = response.json()["choices"][0]["message"]
-    print("Reasoning:", message.get("reasoning", "N/A"))
-    print("Response:", message["content"])
+
+
+def reply():
+    if response.status_code != 200:
+        print(f"Error {response.status_code}:", response.json())
+    else:
+        message = response.json()["choices"][0]["message"]
+        return message.get("reasoning", "N/A") , message["content"]

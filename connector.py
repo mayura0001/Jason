@@ -14,7 +14,7 @@ DELETE : Delete --> Delete data from the server
 
 '''
 
-
+from main import reply
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -38,4 +38,4 @@ def root():
 
 @app.get("/chat")
 def chat():
-    return {"message": "Hello from /chat endpoint"}
+    return {"message": reply()}
