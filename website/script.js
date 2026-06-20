@@ -1,5 +1,3 @@
-/*
-
 const messagesEl = document.getElementById('messages');
 const inputEl = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
@@ -7,11 +5,13 @@ const sendBtn = document.getElementById('send-btn');
 let isLoading = false;
 let msgId = 0;
 
+// Auto-resize textarea
 inputEl.addEventListener('input', () => {
   inputEl.style.height = 'auto';
   inputEl.style.height = Math.min(inputEl.scrollHeight, 128) + 'px';
 });
 
+// Send message on Enter (without Shift)
 inputEl.addEventListener('keydown', e => {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
@@ -19,16 +19,20 @@ inputEl.addEventListener('keydown', e => {
   }
 });
 
+// Send message on button click
 sendBtn.addEventListener('click', send);
 
+// For testing without backend
 function removeEmptyState() {
   document.getElementById('empty-state')?.remove();
 }
 
+// Scroll to bottom of messages
 function scrollBottom() {
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
+// Escape HTML to prevent XSS and preserve line breaks
 function escHtml(str) {
   return str
     .replace(/&/g, '&amp;')
@@ -37,6 +41,7 @@ function escHtml(str) {
     .replace(/\n/g, '<br>');
 }
 
+// Add user message bubble
 function addUserBubble(text) {
   removeEmptyState();
 
@@ -48,6 +53,7 @@ function addUserBubble(text) {
   scrollBottom();
 }
 
+// Add assistant "thinking" indicator
 function addThinking() {
   const row = document.createElement('div');
 
@@ -64,10 +70,12 @@ function addThinking() {
   scrollBottom();
 }
 
+// Remove assistant "thinking" indicator
 function removeThinking() {
   document.getElementById('thinking')?.remove();
 }
 
+// Add assistant response bubble with optional reasoning
 function addAssistantBubble(content, reasoning) {
   const id = ++msgId;
   const hasReasoning = reasoning?.trim().length > 0;
@@ -95,6 +103,7 @@ function addAssistantBubble(content, reasoning) {
   scrollBottom();
 }
 
+// Add error message bubble
 function addErrorBubble(msg) {
   const div = document.createElement('div');
 
@@ -108,6 +117,7 @@ function addErrorBubble(msg) {
   scrollBottom();
 }
 
+// Toggle reasoning visibility
 function toggleReasoning(id) {
   const box = document.getElementById(`reasoning-${id}`);
   const label = document.getElementById(`toggle-label-${id}`);
@@ -121,7 +131,7 @@ function toggleReasoning(id) {
 
   scrollBottom();
 }
-
+/*
 async function send() {
   const text = inputEl.value.trim();
 
@@ -137,7 +147,7 @@ async function send() {
   addThinking();
 
   try {
-    const res = await fetch('http://localhost:8000/chat', {
+    const res = await fetch('http://127.0.0.1:8000/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -169,7 +179,6 @@ async function send() {
   inputEl.focus();
 }
 */
-
 //fetch
 
 fetch('http://127.0.0.1:8000/chat')
