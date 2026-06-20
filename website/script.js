@@ -1,3 +1,5 @@
+/*
+
 const messagesEl = document.getElementById('messages');
 const inputEl = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
@@ -166,3 +168,15 @@ async function send() {
   sendBtn.disabled = false;
   inputEl.focus();
 }
+*/
+
+//fetch
+
+fetch('http://127.0.0.1:8000/chat')
+  .then(response => response.json())
+  .then(data => {
+    console.log('Response from server:', data);
+  })
+  .catch(error => {
+    console.error('Error fetching from server:', error);
+  });

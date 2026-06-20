@@ -2,7 +2,7 @@
 pip install "fastapi[standard]".  --> install fastapi and its dependencies
 uvicorn connector:app --reload    --> run command, _____:app //blanch should be the file meme
 (Press CTRL+C to quit)            --> stop the server
-http://127.0.0.1:8000/docs        --> Fast API Terminal to test the API
+http://127.0.0.1:8000/docs#        --> Fast API Terminal to test the API
 
 FastAPI - is a RestAPI python based api help to communicate between server(backend) and the frontend
 Uvicorn - Python Server
@@ -16,9 +16,25 @@ DELETE : Delete --> Delete data from the server
 
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-@app.get("/") # Define a GET(read) endpoint at the root URL
-def greet():
-    return {"Hello": "World!"} # Return a JSON response with a greeting message
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:5500",
+        "http://localhost:5500",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/")
+def root():
+    return {"message": "Hello"}
+
+@app.get("/chat")
+def chat():
+    return {"message": "Hello from /chat endpoint"}
