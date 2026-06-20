@@ -20,6 +20,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+# CORS (Cross-Origin Resource Sharing) configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
