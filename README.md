@@ -1,20 +1,15 @@
+//used versions for this project
 
 python version = 3.14.6
+node version = v24.14.1
+
+
+//Setup
+
+Install Python and Node first
 
 python3 -m venv .venv
 source .venv/bin/activate
 
-pip install requests
-pip install dotenv
+pip install requests python-dotenv fastapi "uvicorn[standard]"
 
-pip install "fastapi[standard]"
-uvicorn connector:app --reload 
-(Press CTRL+C to quit)
-
-FastAPI - is a RestAPI python based api help to communicate between server(backend) and the frontend
-Uvicorn - Python Server
-
-GET : Read
-POST : Create
-PUT : Update
-DELETE : Delete
