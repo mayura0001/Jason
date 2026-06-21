@@ -31,16 +31,21 @@ def send(user_input):
 
     msg = response.json()["choices"][0]["message"]
     
-    mydict = {}
-    mydict["input"] = user_input
-    mydict["reasoning"] = msg.get("reasoning")
-    mydict["content"] = msg.get("content")
-    chats.append(mydict)
+    chats.append({"role": "user", "content": user_input})
+    chats.append({"role": "assistant", "content": msg.get("content", "")})
 
     return {
-        "response": msg.get("content", ""),
-        "reasoning": msg.get("reasoning", "")
+        "reasoning": msg.get("reasoning", ""),
+        "response": msg.get("content", "")
+        
     }
 
-send("What is the capital of France?")
+while True:
+    user_input = input("You: ")
+    if user_input.lower() in ["exit", "quit"]:
+        break
+    full_input = "\n".join([f"{chat['role']}: {chat['content']}" for chat in chats]) + f"\nuser: {user_input}"
+    result = send(full_input)
+    print(f"Assistant: {result['response']}")
 print(chats)
+ 
