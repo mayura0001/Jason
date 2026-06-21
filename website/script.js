@@ -131,6 +131,8 @@ function toggleReasoning(id) {
 
   scrollBottom();
 }
+
+// LLM generated code which i still do not understand
 /*
 async function send() {
   const text = inputEl.value.trim();
@@ -179,6 +181,7 @@ async function send() {
   inputEl.focus();
 }
 */
+
 //fetch
 
 fetch('http://127.0.0.1:8000/chat')

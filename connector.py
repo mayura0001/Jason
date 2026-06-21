@@ -14,7 +14,7 @@ DELETE : Delete --> Delete data from the server
 
 '''
 
-from main import reply
+from main import send
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -34,8 +34,8 @@ app.add_middleware(
 
 @app.get("/")
 def root():
-    return {"message": "Hello"}
+    return {"message": "Server is up and running!"}
 
-@app.get("/chat")
-def chat():
-    return {"message": reply()}
+@app.post("/chat")
+def chat(user_input: str):
+    return {"message": send(user_input)}
