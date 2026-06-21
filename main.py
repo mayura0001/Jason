@@ -11,7 +11,7 @@ if not API_KEY:
 
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
-# Store conversation history
+# Store conversation history (in-memory, resets on server restart)
 chat_history = []
 
 HEADERS = {
@@ -25,6 +25,8 @@ MODEL = "openai/gpt-oss-120b:free"
 def send_message(user_input: str) -> dict:
     """
     Sends user message to OpenRouter and returns assistant response.
+    Called directly by connector.py's /chat endpoint - no loop needed,
+    FastAPI invokes this once per incoming request.
     """
 
     # Build messages properly (chat history + new input)
@@ -66,25 +68,3 @@ def send_message(user_input: str) -> dict:
         "response": assistant_content,
         "reasoning": reasoning_content
     }
-
-
-def chat_loop():
-    print("Chat started (type 'exit' to quit)\n")
-
-    while True:
-        user_input = input("You: ").strip()
-
-        if user_input.lower() in ["exit", "quit"]:
-            break
-
-        if not user_input:
-            continue
-
-        result = send_message(user_input)
-
-        print(f"\nAssistant: {result['response']}\n")
-
-
-if __name__ == "__main__":
-    chat_loop()
-    print(chat_history)

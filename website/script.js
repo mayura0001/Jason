@@ -15,7 +15,7 @@ inputEl.addEventListener('input', () => {
 inputEl.addEventListener('keydown', e => {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
-    send(); 
+    send();
   }
 });
 
@@ -132,8 +132,6 @@ function toggleReasoning(id) {
   scrollBottom();
 }
 
-// LLM generated code which i still do not understand
-/*
 async function send() {
   const text = inputEl.value.trim();
 
@@ -180,15 +178,3 @@ async function send() {
   sendBtn.disabled = false;
   inputEl.focus();
 }
-*/
-
-//fetch
-
-fetch('http://127.0.0.1:8000/chat')
-  .then(response => response.json())
-  .then(data => {
-    console.log('Response from server:', data);
-  })
-  .catch(error => {
-    console.error('Error fetching from server:', error);
-  });
