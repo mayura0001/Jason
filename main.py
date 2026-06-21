@@ -1,15 +1,9 @@
-from urllib import response
-
 import requests
-import json
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 print("successfully loaded env variables")
-
-
-user_input = "Hello, how are you doing today?"
 
 def send(user_input):
     response = requests.post(
@@ -38,7 +32,3 @@ def send(user_input):
         "response": msg.get("content", ""),
         "reasoning": msg.get("reasoning", "")
     }
-
-
-
-
