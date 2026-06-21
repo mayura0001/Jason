@@ -2,50 +2,89 @@ import requests
 import os
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
-print("successfully loaded env variables")
 
-chats = []
+API_KEY = os.getenv("OPENROUTER_API_KEY")
+if not API_KEY:
+    raise ValueError("OPENROUTER_API_KEY not found in environment variables")
 
-def send(user_input):
-    response = requests.post(
-        "https://openrouter.ai/api/v1/chat/completions",
-        headers={
-            "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
-            "Content-Type": "application/json",
-        },
-        json={
-            "model": "openai/gpt-oss-120b:free",
-            "messages": [
-                {
-                    "role": "user",
-                    "content": user_input
-                }
-            ],
-            "reasoning": {"enabled": True}
-        }
-    )
+API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
-    if response.status_code != 200:
-        return {"response": f"Error {response.status_code}", "reasoning": ""}
+# Store conversation history
+chat_history = []
 
-    msg = response.json()["choices"][0]["message"]
-    
-    chats.append({"role": "user", "content": user_input})
-    chats.append({"role": "assistant", "content": msg.get("content", "")})
+HEADERS = {
+    "Authorization": f"Bearer {API_KEY}",
+    "Content-Type": "application/json",
+}
 
-    return {
-        "reasoning": msg.get("reasoning", ""),
-        "response": msg.get("content", "")
-        
+MODEL = "openai/gpt-oss-120b:free"
+
+
+def send_message(user_input: str) -> dict:
+    """
+    Sends user message to OpenRouter and returns assistant response.
+    """
+
+    # Build messages properly (chat history + new input)
+    messages = chat_history + [
+        {"role": "user", "content": user_input}
+    ]
+
+    payload = {
+        "model": MODEL,
+        "messages": messages,
+        "reasoning": {"enabled": True}
     }
 
-while True:
-    user_input = input("You: ")
-    if user_input.lower() in ["exit", "quit"]:
-        break
-    full_input = "\n".join([f"{chat['role']}: {chat['content']}" for chat in chats]) + f"\nuser: {user_input}"
-    result = send(full_input)
-    print(f"Assistant: {result['response']}")
-print(chats)
- 
+    try:
+        response = requests.post(API_URL, headers=HEADERS, json=payload, timeout=30)
+    except requests.exceptions.RequestException as e:
+        return {"response": f"Network error: {str(e)}", "reasoning": ""}
+
+    # Handle bad HTTP responses
+    if response.status_code != 200:
+        return {
+            "response": f"HTTP Error {response.status_code}: {response.text}",
+            "reasoning": ""
+        }
+
+    data = response.json()
+
+    # Safely extract message
+    message = data.get("choices", [{}])[0].get("message", {})
+
+    assistant_content = message.get("content", "")
+    reasoning_content = message.get("reasoning", "")
+
+    # Update history ONLY after successful response
+    chat_history.append({"role": "user", "content": user_input})
+    chat_history.append({"role": "assistant", "content": assistant_content})
+
+    return {
+        "response": assistant_content,
+        "reasoning": reasoning_content
+    }
+
+
+def chat_loop():
+    print("Chat started (type 'exit' to quit)\n")
+
+    while True:
+        user_input = input("You: ").strip()
+
+        if user_input.lower() in ["exit", "quit"]:
+            break
+
+        if not user_input:
+            continue
+
+        result = send_message(user_input)
+
+        print(f"\nAssistant: {result['response']}\n")
+
+
+if __name__ == "__main__":
+    chat_loop()
+    print(chat_history)
