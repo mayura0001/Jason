@@ -19,7 +19,7 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
-MODEL = "openai/gpt-oss-120b:free"
+MODEL = "openrouter/free"
 
 
 def send_message(user_input: str) -> dict:
